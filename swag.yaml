@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: rest-api-swagger
+spec:
+ replicas: 2
+ template:
+  metadata:
+   labels:
+    app: rest-api-swagger
+  spec:
+   containers:
+   - name: rest-api-swagger
+     image: swaggerapi/swagger-ui
+     ports:
+     - containerPort: 10010
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+ name: rest-api-swagger
+spec:
+ type:  NodePort
+ ports:
+ - name: http
+   port: 8080
+   targetPort: 10010
+   protocol: TCP
+ selector:
+  app: rest-api-swagger
