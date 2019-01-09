@@ -22,7 +22,7 @@ spec:
   ports:
   - name: kong-proxy-ssl
     port: 8443
-    targetPort: 8443
+    targetPort: 443
     protocol: TCP
   selector:
     app: kong
@@ -37,7 +37,7 @@ spec:
   ports:
   - name: kong-admin
     port: 8001
-    targetPort: 8001
+    targetPort: 80
     protocol: TCP
   selector:
     app: kong
