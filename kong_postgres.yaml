@@ -6,8 +6,8 @@ spec:
   type: NodePort
   ports:
   - name: kong-proxy
-    port: 8000
-    targetPort: 8000
+    port: 80
+    targetPort: 80
     protocol: TCP
   selector:
     app: kong
@@ -21,7 +21,7 @@ spec:
   type: NodePort
   ports:
   - name: kong-proxy-ssl
-    port: 8443
+    port: 443
     targetPort: 443
     protocol: TCP
   selector:
@@ -36,8 +36,8 @@ spec:
   type: NodePort
   ports:
   - name: kong-admin
-    port: 8001
-    targetPort: 80
+    port: 81
+    targetPort: 81
     protocol: TCP
   selector:
     app: kong
@@ -63,7 +63,7 @@ kind: Deployment
 metadata:
   name: kong-rc
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -75,7 +75,10 @@ spec:
         image: kong:0.14.1
         env:
           - name: KONG_ADMIN_LISTEN
-            value: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+            value: "0.0.0.0:81, 0.0.0.0:8444 ssl"
+          - name: KONG_PROXY_LISTEN
+            value: "0.0.0.0:80, 0.0.0.0:443"
+
           - name: KONG_PG_PASSWORD
             value: kong
           - name: KONG_PG_HOST
@@ -90,7 +93,7 @@ spec:
             value: "/dev/stderr"
         ports:
         - name: admin
-          containerPort: 8001
+          containerPort: 81
           protocol: TCP
         - name: proxy
           containerPort: 8000
